@@ -6,11 +6,10 @@ from flask_socketio import SocketIO, emit
 import cv2
 import numpy as np
 import base64
-import json
 from main import YogaAnalyzer
 
 app = Flask(__name__)
-socketio = SocketIO(app, async_mode='eventlet', ping_interval=30, ping_timeout=150)
+socketio = SocketIO(app, async_mode='eventlet', cors_allowed_origins="*")
 
 yoga_analyzer = YogaAnalyzer()
 
@@ -32,10 +31,10 @@ def handle_frame(data):
         analyzed_frame = yoga_analyzer.analyze_pose(frame)
         results = yoga_analyzer.get_results()
         print(results)
-        emit('analysis_result', json.dumps(results))
+        emit('analysis_result', results)
 
     except Exception as e:
-        emit('analysis_result', json.dumps({'error': str(e)}))
+        emit('analysis_result', {'error': str(e)})
 
 if __name__ == "__main__":
     socketio.run(app, debug=True, host='0.0.0.0', port=5000)
