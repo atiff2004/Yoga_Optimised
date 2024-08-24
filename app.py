@@ -1,6 +1,3 @@
-from gevent import monkey
-monkey.patch_all()
-
 from flask import Flask, jsonify
 from flask_socketio import SocketIO, emit
 import cv2
@@ -9,7 +6,7 @@ import base64
 from main import YogaAnalyzer
 
 app = Flask(__name__)
-socketio = SocketIO(app, async_mode='gevent')
+socketio = SocketIO(app, async_mode='eventlet')
 
 yoga_analyzer = YogaAnalyzer()
 
@@ -30,11 +27,10 @@ def handle_frame(data):
 
         analyzed_frame = yoga_analyzer.analyze_pose(frame)
         results = yoga_analyzer.get_results()
-        print(results)
         emit('analysis_result', results)
 
     except Exception as e:
         emit('analysis_result', {'error': str(e)})
 
 if __name__ == "__main__":
-    socketio.run(app, debug=True, host='0.0.0.0', port=5000)
+    socketio.run(app, debug=True, host='0.0.0.0', port=2000)
