@@ -10,6 +10,10 @@ socketio = SocketIO(app, async_mode='eventlet')
 
 yoga_analyzer = YogaAnalyzer()
 
+@app.route('/')
+def index():
+    return "Welcome to the Flask Yoga API!"
+
 @socketio.on('connect')
 def on_connect():
     emit('response', {'message': 'Connected to Flask WebSocket'})
