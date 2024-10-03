@@ -17,6 +17,7 @@ def index():
 @socketio.on('connect')
 def on_connect():
     emit('response', {'message': 'Connected to Flask WebSocket'})
+    emit('request_frame')  # Request the first frame immediately after connection
 
 @socketio.on('send_frame')
 def handle_frame(data):
